@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PTIS Kapit</title>
+
+  <style>
+    :root {
+      --blue: #1a5276;
+      --blue-dark: #154360;
+      --light-blue: #2e86c1;
+      --green: #16a085;
+      --bg: #f4f6f9;
+      --border: #dce1e8;
+      --text: #2c3e50;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .sidebar {
+      width: 255px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      background: var(--blue);
+      color: white;
+      overflow-y: auto;
+      z-index: 5;
+    }
+
+    .logo {
+      padding: 22px 15px;
+      text-align: center;
+      background: var(--blue-dark);
+      border-bottom: 8px solid #1b6085;
+    }
+
+    .logo h2 {
+      margin: 0 0 5px;
+      color: var(--light-blue);
+      font-size: 1.2rem;
+    }
+
+    .logo small { opacity: .9; }
+
+    nav { padding: 10px 0; }
+
+    .nav-link,
+    .nav-heading {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 13px 18px;
+      border-left: 4px solid transparent;
+    }
+
+    .nav-link {
+      cursor: pointer;
+      line-height: 1.4;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #ffffff1c;
+      border-left-color: var(--green);
+    }
+
+    .nav-heading {
+      margin-top: 8px;
+      padding-top: 15px;
+      padding-bottom: 8px;
+      color: #bfe4f8;
+      font-size: .78rem;
+      font-weight: bold;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      border-left-color: transparent;
+    }
+
+    main {
+      margin-left: 255px;
+      padding: 22px;
+    }
+
+    header, .card, .stat {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px #0000000d;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      color: var(--blue);
+      font-size: 1.45rem;
+      margin: 0;
+    }
+
+    h2 {
+      color: var(--blue);
+      font-size: 1.15rem;
+    }
+
+    h3 { color: var(--blue); }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .stat {
+      text-align: center;
+      border-top: 4px solid var(--light-blue);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.8rem;
+      color: var(--blue);
+      margin-bottom: 4px;
+    }
+
+    button, .button {
+      border: 0;
+      border-radius: 6px;
+      padding: 9px 13px;
+      cursor: pointer;
+      color: white;
+      background: var(--light-blue);
+      text-decoration: none;
+      display: inline-block;
+      font: inherit;
+    }
+
+    button:hover, .button:hover { opacity: .88; }
+    .green { background: #27ae60; }
+    .red { background: #e74c3c; }
+    .orange { background: #f39c12; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font: inherit;
+      background: white;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: .9rem;
+    }
+
+    .field { margin-bottom: 14px; }
+
+    .field small {
+      display: block;
+      margin-top: 6px;
+      color: #687782;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+    }
+
+    .school-checkbox-list {
+      max-height: 230px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      background: white;
+    }
+
+    .school-checkbox-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 7px 2px;
+      margin: 0;
+      font-weight: normal;
+      line-height: 1.4;
+      cursor: pointer;
+    }
+
+    .school-checkbox-option input[type="checkbox"] {
+      width: auto;
+      flex: 0 0 auto;
+      margin: 2px 0 0;
+      padding: 0;
+      accent-color: var(--light-blue);
+    }
+
+    .school-checkbox-option span {
+      overflow-wrap: anywhere;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--blue);
+      color: white;
+    }
+
+    #page-sekolah th:nth-child(n+3),
+    #page-sekolah td:nth-child(n+3) {
+      text-align: center;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    .notice {
+      padding: 12px;
+      background: #eaf2f8;
+      border-left: 4px solid var(--light-blue);
+      margin-bottom: 14px;
+    }
+
+    .empty {
+      color: #687782;
+      padding: 12px 0;
+    }
+
+    .profile {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      margin: 10px 0;
+      background: white;
+    }
+
+    .profile h3 {
+      margin: 0 0 8px;
+      color: var(--blue);
+    }
+
+    .actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .device-status {
+      min-width: 180px;
+      margin-bottom: 8px;
+    }
+
+    .device-status select,
+    .device-status textarea {
+      margin-top: 6px;
+    }
+
+    .device-problem-text {
+      margin-top: 6px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .menu-button { display: none; }
+    .modal[hidden] { display: none; }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      overflow: auto;
+      background: #0008;
+      padding: 10px;
+    }
+
+    @media (max-width: 760px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: .2s;
+      }
+
+      .sidebar.open { transform: translateX(0); }
+
+      main {
+        margin: 0;
+        padding: 65px 14px 14px;
+      }
+
+      .menu-button {
+        display: block;
+        position: fixed;
+        z-index: 10;
+        top: 12px;
+        left: 12px;
+      }
+    }
+
+    @media print {
+      .sidebar, .menu-button, header button, .no-print {
+        display: none !important;
+      }
+
+      main {
+        margin: 0;
+        padding: 0;
+      }
+
+      body { background: white; }
+
+      .card, .stat { box-shadow: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <button class="menu-button" onclick="toggleMenu()">☰ Menu</button>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <h2>PTIS KAPIT</h2>
+      <small>Pasukan Teknikal ICT Sekolah</small>
+    </div>
+
+    <nav>
+      <a class="nav-link active" data-page="dashboard"
+         onclick="showPage('dashboard')">📊 Dashboard</a>
+
+      <div class="nav-heading">Sistem Pengurusan PTIS</div>
+
+      <a class="nav-link" data-page="sekolah"
+         onclick="showPage('sekolah')">🏫 Maklumat Sekolah &amp; Peranti</a>
+
+      <a class="nav-link" data-page="peranti"
+         onclick="showPage('peranti')">💻 Pengurusan Peranti</a>
+
+      <a class="nav-link" data-page="ahli"
+         onclick="showPage('ahli')">👥 Maklumat Ahli PTIS Kapit</a>
+
+      <a class="nav-link" data-page="scst"
+         onclick="showPage('scst')">📄 Laporan SCST Lawatan PTIS Kapit</a>
+    </nav>
+  </aside>
+
+  <main>
+    <section class="page active" id="page-dashboard">
+      <header>
+        <h1>Dashboard PTIS Kapit</h1>
+        <span>Daerah Kapit, Sarawak</span>
+      </header>
+
+      <div class="stats" id="dashboardStats"></div>
+
+      <div class="card">
+        <h2>Maklumat Sistem</h2>
+        <p id="dashboardInfo"></p>
+        <button onclick="showPage('scst')">Buka Laporan SCST Lawatan</button>
+      </div>
+
+      <div class="card">
+        <h2>Profil Ahli PTIS Kapit</h2>
+        <p class="empty">Senarai ahli, sekolah seliaan dan sekolah yang telah dilawati.</p>
+        <div id="dashboardMembers"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-sekolah">
+      <header>
+        <h1>Maklumat Sekolah &amp; Peranti</h1>
+        <button onclick="openSchoolForm()">+ Tambah Sekolah</button>
+      </header>
+
+      <div class="card">
+        <div class="notice">
+          Setiap sekolah mempunyai kategori PDT, PDP, Peranti Guru dan Peranti Cerdik.
+          Bilangan dipaparkan berdasarkan rekod peranti yang didaftarkan.
+        </div>
+
+        <div class="field">
+          <input id="schoolSearch" placeholder="Cari sekolah..." oninput="renderSchools()">
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Bil.</th>
+                <th>Nama Sekolah</th>
+                <th>PDT</th>
+                <th>PDP</th>
+                <th>Peranti Guru</th>
+                <th>Peranti Cerdik</th>
+              </tr>
+            </thead>
+            <tbody id="schoolRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-peranti">
+      <header>
+        <h1>Pengurusan Peranti</h1>
+        <button onclick="openDeviceForm()">+ Daftar Peranti</button>
+      </header>
+
+      <div class="card">
+        <div class="notice">
+          Daftarkan peranti mengikut sekolah dan kumpulan. Pilih keadaan peranti
+          pada lajur Keadaan Peranti. Senarai boleh ditapis dan dicetak sebagai PDF.
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="deviceFilter">Tapis kumpulan</label>
+            <select id="deviceFilter" onchange="renderDevices()">
+              <option value="">Semua kumpulan</option>
+              <option value="PDT">PDT</option>
+              <option value="PDP">PDP</option>
+              <option value="Peranti Guru">Peranti Guru</option>
+              <option value="Peranti Cerdik">Peranti Cerdik</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="deviceSearch">Carian</label>
+            <input id="deviceSearch" placeholder="Sekolah, model atau nombor..." oninput="renderDevices()">
+          </div>
+        </div>
+
+        <div class="actions no-print" style="margin-bottom:12px">
+          <button onclick="downloadDevicePDF('')">PDF Semua</button>
+          <button onclick="downloadDevicePDF('PDT')">PDF PDT</button>
+          <button onclick="downloadDevicePDF('PDP')">PDF PDP</button>
+          <button onclick="downloadDevicePDF('Peranti Guru')">PDF Peranti Guru</button>
+          <button onclick="downloadDevicePDF('Peranti Cerdik')">PDF Peranti Cerdik</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Bil.</th>
+                <th>Sekolah</th>
+                <th>Kumpulan</th>
+                <th>Jenis</th>
+                <th>Model</th>
+                <th>No. Siri</th>
+                <th>No. Pendaftaran</th>
+                <th>Keadaan Peranti</th>
+              </tr>
+            </thead>
+            <tbody id="deviceRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-ahli">
+      <header>
+        <h1>Maklumat Ahli PTIS Kapit</h1>
+        <button onclick="openMemberForm()">+ Daftar Ahli</button>
+      </header>
+
+      <div class="card">
+        <p>Ahli perlu mengisi borang pendaftaran sendiri.</p>
+        <div id="memberList"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-scst">
+      <header>
+        <h1>Laporan SCST Lawatan PTIS Kapit</h1>
+        <button onclick="showPage('ahli')">Urus profil ahli</button>
+      </header>
+
+      <div class="card">
+        <h2>Profil ahli</h2>
+        <div class="field">
+          <label for="scstMember">Pilih ahli yang menghantar laporan</label>
+          <select id="scstMember" onchange="renderScst()"></select>
+        </div>
+        <div id="scstProfile" class="notice"></div>
+      </div>
+
+      <div class="card">
+        <h2>Hantar laporan lawatan</h2>
+        <form id="scstForm">
+          <div class="row">
+            <div class="field">
+              <label for="scstSchool">Sekolah yang dilawati *</label>
+              <select id="scstSchool" required></select>
+            </div>
+
+            <div class="field">
+              <label for="scstDate">Tarikh lawatan *</label>
+              <input id="scstDate" type="date" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="scstFile">Laporan SCST (PDF sahaja) *</label>
+            <input id="scstFile" type="file" accept="application/pdf,.pdf" required>
+          </div>
+
+          <button class="green" type="submit">Simpan dan hantar laporan</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Rekod laporan dan sekolah dilawati</h2>
+        <div id="scstRecords"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="memberDialog" class="modal" hidden>
+    <div class="card" style="max-width:650px;margin:5vh auto">
+      <div class="actions" style="justify-content:space-between">
+        <h2 id="memberFormTitle">Pendaftaran Ahli PTIS</h2>
+        <button class="red" type="button" onclick="closeDialog('memberDialog')">Tutup</button>
+      </div>
+
+      <form id="memberForm">
+        <input type="hidden" id="memberId">
+
+        <div class="field">
+          <label for="memberName">Nama ahli *</label>
+          <input id="memberName" required>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="memberEmail">Emel rasmi ahli PTIS *</label>
+            <input id="memberEmail" type="email" required>
+          </div>
+
+          <div class="field">
+            <label for="memberPhone">Nombor telefon *</label>
+            <input id="memberPhone" type="tel" required>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="memberPosition">Jawatan *</label>
+            <input id="memberPosition" required>
+          </div>
+
+          <div class="field">
+            <label for="memberGrade">Gred *</label>
+            <input id="memberGrade" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Sekolah seliaan * (boleh pilih lebih daripada satu)</label>
+          <div id="memberSchools" class="school-checkbox-list"></div>
+          <small>Tandakan semua sekolah yang berada di bawah seliaan ahli.</small>
+        </div>
+
+        <button class="green" type="submit">Simpan profil</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="schoolDialog" class="modal" hidden>
+    <div class="card" style="max-width:550px;margin:8vh auto">
+      <div class="actions" style="justify-content:space-between">
+        <h2>Tambah sekolah</h2>
+        <button class="red" type="button" onclick="closeDialog('schoolDialog')">Tutup</button>
+      </div>
+
+      <form id="schoolForm">
+        <div class="field">
+          <label for="schoolName">Nama sekolah *</label>
+          <input id="schoolName" required>
+        </div>
+        <button class="green" type="submit">Simpan sekolah</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="deviceDialog" class="modal" hidden>
+    <div class="card" style="max-width:700px;margin:5vh auto">
+      <div class="actions" style="justify-content:space-between">
+        <h2 id="deviceFormTitle">Daftar peranti</h2>
+        <button class="red" type="button" onclick="closeDialog('deviceDialog')">Tutup</button>
+      </div>
+
+      <form id="deviceForm">
+        <input type="hidden" id="deviceId">
+
+        <div class="row">
+          <div class="field">
+            <label for="deviceSchool">Sekolah *</label>
+            <select id="deviceSchool" required></select>
+          </div>
+
+          <div class="field">
+            <label for="deviceGroup">Kumpulan peranti *</label>
+            <select id="deviceGroup" required>
+              <option value="">Pilih kumpulan</option>
+              <option value="PDT">PDT</option>
+              <option value="PDP">PDP</option>
+              <option value="Peranti Guru">Peranti Guru</option>
+              <option value="Peranti Cerdik">Peranti Cerdik</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="deviceType">Jenis peranti *</label>
+            <select id="deviceType" required onchange="toggleOtherDevice()">
+              <option value="">Pilih jenis</option>
+              <option value="Laptop">Laptop</option>
+              <option value="Printer">Printer</option>
+              <option value="PC">PC</option>
+              <option value="LCD">LCD</option>
+              <option value="Lain-lain">Lain-lain</option>
+            </select>
+          </div>
+
+          <div class="field" id="otherDeviceField" hidden>
+            <label for="deviceOtherType">Nyatakan jenis lain *</label>
+            <input id="deviceOtherType">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="deviceModel">Model</label>
+            <input id="deviceModel">
+          </div>
+
+          <div class="field">
+            <label for="deviceSerial">Nombor siri</label>
+            <input id="deviceSerial">
+          </div>
+
+          <div class="field">
+            <label for="deviceRegistration">Nombor pendaftaran</label>
+            <input id="deviceRegistration">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="deviceStatus">Keadaan Peranti *</label>
+          <select id="deviceStatus" required onchange="toggleDeviceProblem()">
+            <option value="Berfungsi">Berfungsi</option>
+            <option value="Tidak Berfungsi">Tidak Berfungsi</option>
+            <option value="Nyatakan Masalah">Nyatakan Masalah</option>
+          </select>
+        </div>
+
+        <div class="field" id="deviceProblemField" hidden>
+          <label for="deviceProblem">Nyatakan masalah peranti *</label>
+          <textarea id="deviceProblem" rows="3"
+            placeholder="Contoh: Skrin rosak, bateri tidak boleh dicas..."></textarea>
+        </div>
+
+        <button class="green" type="submit">Simpan peranti</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const SCHOOL_NAMES = [
+      "SEKOLAH JENIS KEBANGSAAN (CINA) HOCK LAM",
+      "SEKOLAH KEBANGSAAN KG BARU",
+      "SEKOLAH KEBANGSAAN LBK MAWANG",
+      "SEKOLAH KEBANGSAAN LEPONG BALLEH",
+      "SEKOLAH KEBANGSAAN LEPONG GAAT",
+      "SEKOLAH KEBANGSAAN LP MENUAN",
+      "SEKOLAH KEBANGSAAN METHODIST",
+      "SEKOLAH KEBANGSAAN NANGA ENTULOH",
+      "SEKOLAH KEBANGSAAN NG ANTAROH",
+      "SEKOLAH KEBANGSAAN NG BALANG",
+      "SEKOLAH KEBANGSAAN NG ENCHEREMIN",
+      "SEKOLAH KEBANGSAAN NG KAIN",
+      "SEKOLAH KEBANGSAAN NG MELUAN",
+      "SEKOLAH KEBANGSAAN NG METAH",
+      "SEKOLAH KEBANGSAAN NG MUJONG",
+      "SEKOLAH KEBANGSAAN NG SEGENOK",
+      "SEKOLAH KEBANGSAAN NG TIAU",
+      "SEKOLAH KEBANGSAAN NG TRUSA",
+      "SEKOLAH KEBANGSAAN SG AMANG",
+      "SEKOLAH KEBANGSAAN SG MENUAN",
+      "SEKOLAH KEBANGSAAN SUNGAI KAPIT",
+      "SEKOLAH KEBANGSAAN ULU PELAGUS",
+      "SEKOLAH KEBANGSAAN ULU YONG",
+      "SEKOLAH MENENGAH KEBANGSAAN BALLEH",
+      "SEKOLAH MENENGAH KEBANGSAAN KAPIT",
+      "SEKOLAH MENENGAH KEBANGSAAN KAPIT NO.2",
+      "SEKOLAH MENENGAH KEBANGSAAN SELIRIK",
+      "SK BEBANGAN",
+      "SK KAPIT",
+      "SK LUBOK BAYA",
+      "SK MUJONG TENGAH",
+      "SK NANAGA STAPANG",
+      "SK NANGA BAWAI",
+      "SK NANGA BENA",
+      "SK NANGA IBAU",
+      "SK NANGA IBUN",
+      "SK NANGA KEBIAW",
+      "SK NANGA MERIT",
+      "SK NANGA OYAN",
+      "SK NANGA PELAGUS",
+      "SK NANGA PERARAN",
+      "SK NANGA SAMA",
+      "SK NANGA SEMPILI",
+      "SK NANGA YONG",
+      "SK OYAN TENGAH",
+      "SK RANTAU PANJAI",
+      "SK SUNGAI PAKU",
+      "SK SUNGAI TUNOH",
+      "SK TEMENGGONG KOH"
+    ];
+
+    const STORAGE_KEYS = {
+      schools: "ptis_kapit_schools_v8",
+      members: "ptis_kapit_members_v8",
+      devices: "ptis_kapit_devices_v8",
+      reports: "ptis_kapit_scst_v8"
+    };
+
+    function loadData(key, fallback) {
+      try {
+        return JSON.parse(localStorage.getItem(key)) ?? fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    let schools = loadData(
+      STORAGE_KEYS.schools,
+      SCHOOL_NAMES.map((name, index) => ({ id: index + 1, name }))
+    );
+
+    let members = loadData(STORAGE_KEYS.members, []);
+    let devices = loadData(STORAGE_KEYS.devices, []);
+    let reports = loadData(STORAGE_KEYS.reports, []);
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEYS.schools, JSON.stringify(schools));
+      localStorage.setItem(STORAGE_KEYS.members, JSON.stringify(members));
+      localStorage.setItem(STORAGE_KEYS.devices, JSON.stringify(devices));
+
+      try {
+        localStorage.setItem(STORAGE_KEYS.reports, JSON.stringify(reports));
+      } catch {
+        alert("Ruang simpan pelayar penuh. Cuba gunakan fail PDF yang lebih kecil.");
+      }
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[character]);
+    }
+
+    function getMemberSchools(member) {
+      if (Array.isArray(member?.schools)) return member.schools;
+
+      return String(member?.schools || "")
+        .split(",")
+        .map(name => name.trim())
+        .filter(Boolean);
+    }
+
+    function populateMemberSchoolOptions(selectedSchools = []) {
+      const container = document.getElementById("memberSchools");
+
+      const selected = Array.isArray(selectedSchools)
+        ? selectedSchools
+        : String(selectedSchools || "")
+            .split(",")
+            .map(name => name.trim())
+            .filter(Boolean);
+
+      container.innerHTML = schools.map(school => {
+        const checked = selected.includes(school.name) ? "checked" : "";
+
+        return `
+          <label class="school-checkbox-option">
+            <input
+              type="checkbox"
+              name="memberSchools[]"
+              value="${escapeHTML(school.name)}"
+              ${checked}
+            >
+            <span>${escapeHTML(school.name)}</span>
+          </label>
+        `;
+      }).join("");
+    }
+
+    function getSelectedMemberSchools() {
+      return Array.from(
+        document.querySelectorAll(
+          '#memberSchools input[type="checkbox"]:checked'
+        )
+      ).map(checkbox => checkbox.value);
+    }
+
+    function showPage(name) {
+      document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
+      });
+
+      document.getElementById("page-" + name).classList.add("active");
+
+      document.querySelectorAll(".nav-link").forEach(link => {
+        link.classList.toggle("active", link.dataset.page === name);
+      });
+
+      document.getElementById("sidebar").classList.remove("open");
+
+      if (name === "dashboard") renderDashboard();
+      if (name === "sekolah") renderSchools();
+      if (name === "peranti") renderDevices();
+      if (name === "ahli") renderMembers();
+
+      if (name === "scst") {
+        populateScstSelects();
+        renderScst();
+      }
+    }
+
+    function toggleMenu() {
+      document.getElementById("sidebar").classList.toggle("open");
+    }
+
+    function closeDialog(id) {
+      document.getElementById(id).hidden = true;
+    }
+
+    function renderDashboard() {
+      document.getElementById("dashboardStats").innerHTML = `
+        <div class="stat"><strong>${schools.length}</strong>Sekolah</div>
+        <div class="stat"><strong>${members.length}</strong>Ahli berdaftar</div>
+        <div class="stat"><strong>${devices.length}</strong>Rekod peranti</div>
+        <div class="stat"><strong>${reports.length}</strong>Laporan SCST</div>
+      `;
+
+      document.getElementById("dashboardInfo").textContent =
+        "Senarai sekolah tidak termasuk SMK Bukit Goram. Maklumat sekolah, peranti dan ahli diuruskan melalui Sistem Pengurusan PTIS.";
+
+      renderDashboardMembers();
+    }
+
+    function renderDashboardMembers() {
+      const container = document.getElementById("dashboardMembers");
+
+      if (!members.length) {
+        container.innerHTML =
+          '<p class="empty">Belum ada ahli berdaftar. Daftar ahli melalui menu Sistem Pengurusan PTIS.</p>';
+        return;
+      }
+
+      container.innerHTML = members.map(member => {
+        const visitedSchools = reports
+          .filter(report => String(report.memberId) === String(member.id))
+          .map(report => report.school)
+          .filter((school, index, list) => list.indexOf(school) === index);
+
+        return `
+          <div class="profile">
+            <h3>${escapeHTML(member.name)}</h3>
+            <p><b>Emel:</b> ${escapeHTML(member.email || "-")}</p>
+            <p><b>Telefon:</b> ${escapeHTML(member.phone || "-")}</p>
+            <p><b>Jawatan dan gred:</b>
+              ${escapeHTML(member.position || "-")}, ${escapeHTML(member.grade || "-")}
+            </p>
+            <p><b>Sekolah seliaan:</b>
+              ${escapeHTML(getMemberSchools(member).join(", ") || "-")}
+            </p>
+            <p><b>Sekolah dilawati:</b>
+              ${escapeHTML(visitedSchools.join(", ") || "Belum ada rekod lawatan")}
+            </p>
+            <p><b>Bilangan sekolah berbeza dilawati:</b> ${visitedSchools.length}</p>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderSchools() {
+      const searchText =
+        (document.getElementById("schoolSearch").value || "").toLowerCase();
+
+      const filteredSchools = schools.filter(school =>
+        school.name.toLowerCase().includes(searchText)
+      );
+
+      document.getElementById("schoolRows").innerHTML =
+        filteredSchools.map((school, index) => {
+          const count = group => devices.filter(device =>
+            device.school === school.name && device.group === group
+          ).length;
+
+          return `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${escapeHTML(school.name)}</td>
+              <td>${count("PDT")}</td>
+              <td>${count("PDP")}</td>
+              <td>${count("Peranti Guru")}</td>
+              <td>${count("Peranti Cerdik")}</td>
+            </tr>
+          `;
+        }).join("");
+    }
+
+    function openSchoolForm() {
+      document.getElementById("schoolForm").reset();
+      document.getElementById("schoolDialog").hidden = false;
+    }
+
+    document.getElementById("schoolForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const name = document.getElementById("schoolName").value.trim();
+      if (!name) return;
+
+      if (schools.some(school => school.name.toLowerCase() === name.toLowerCase())) {
+        alert("Nama sekolah ini sudah wujud.");
+        return;
+      }
+
+      schools.push({ id: Date.now(), name });
+
+      saveData();
+      closeDialog("schoolDialog");
+      renderSchools();
+      renderDashboard();
+      populateMemberSchoolOptions();
+      populateScstSelects();
+    });
+
+    function renderMembers() {
+      const container = document.getElementById("memberList");
+
+      if (!members.length) {
+        container.innerHTML = '<p class="empty">Belum ada ahli berdaftar.</p>';
+        return;
+      }
+
+      container.innerHTML = members.map(member => {
+        const visitedSchools = reports
+          .filter(report => String(report.memberId) === String(member.id))
+          .map(report => report.school)
+          .filter((school, index, list) => list.indexOf(school) === index);
+
+        return `
+          <div class="profile">
+            <h3>${escapeHTML(member.name)}</h3>
+            <p><b>Emel:</b> ${escapeHTML(member.email)}</p>
+            <p><b>Telefon:</b> ${escapeHTML(member.phone)}</p>
+            <p><b>Jawatan:</b> ${escapeHTML(member.position)}, ${escapeHTML(member.grade)}</p>
+            <p><b>Sekolah seliaan:</b>
+              ${escapeHTML(getMemberSchools(member).join(", ") || "-")}
+            </p>
+            <p><b>Sekolah dilawati:</b>
+              ${escapeHTML(visitedSchools.join(", ") || "Belum ada rekod")}
+            </p>
+            <div class="actions">
+              <button class="orange" onclick="editMember(${Number(member.id)})">Edit</button>
+              <button class="red" onclick="deleteMember(${Number(member.id)})">Padam</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function openMemberForm(member = null) {
+      document.getElementById("memberForm").reset();
+      document.getElementById("memberId").value = member?.id || "";
+      document.getElementById("memberFormTitle").textContent =
+        member ? "Edit profil ahli" : "Pendaftaran Ahli PTIS";
+
+      if (member) {
+        document.getElementById("memberName").value = member.name || "";
+        document.getElementById("memberEmail").value = member.email || "";
+        document.getElementById("memberPhone").value = member.phone || "";
+        document.getElementById("memberPosition").value = member.position || "";
+        document.getElementById("memberGrade").value = member.grade || "";
+      }
+
+      populateMemberSchoolOptions(member?.schools || []);
+      document.getElementById("memberDialog").hidden = false;
+    }
+
+    function editMember(id) {
+      const member = members.find(item => Number(item.id) === Number(id));
+      if (member) openMemberForm(member);
+    }
+
+    function deleteMember(id) {
+      if (!confirm("Padam profil ahli ini? Rekod laporan sedia ada akan dikekalkan.")) return;
+
+      members = members.filter(member => Number(member.id) !== Number(id));
+      saveData();
+      renderMembers();
+      renderDashboard();
+      populateScstSelects();
+      renderScst();
+    }
+
+    document.getElementById("memberForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const selectedSchools = getSelectedMemberSchools();
+
+      if (!selectedSchools.length) {
+        alert("Sila pilih sekurang-kurangnya satu sekolah seliaan.");
+        return;
+      }
+
+      const id = Number(document.getElementById("memberId").value);
+
+      const memberData = {
+        name: document.getElementById("memberName").value.trim(),
+        email: document.getElementById("memberEmail").value.trim(),
+        phone: document.getElementById("memberPhone").value.trim(),
+        position: document.getElementById("memberPosition").value.trim(),
+        grade: document.getElementById("memberGrade").value.trim(),
+        schools: selectedSchools
+      };
+
+      if (id) {
+        const index = members.findIndex(member => Number(member.id) === id);
+        if (index >= 0) {
+          members[index] = { ...members[index], ...memberData };
+        }
+      } else {
+        members.push({ id: Date.now(), ...memberData });
+      }
+
+      saveData();
+      closeDialog("memberDialog");
+      renderMembers();
+      renderDashboard();
+      populateScstSelects();
+    });
+
+    function populateSchoolSelect(selectId, selectedValue = "") {
+      const select = document.getElementById(selectId);
+
+      select.innerHTML =
+        '<option value="">Pilih sekolah</option>' +
+        schools.map(school => `
+          <option value="${escapeHTML(school.name)}">${escapeHTML(school.name)}</option>
+        `).join("");
+
+      select.value = selectedValue;
+    }
+
+    function openDeviceForm(device = null) {
+      document.getElementById("deviceForm").reset();
+      document.getElementById("deviceId").value = device?.id || "";
+      document.getElementById("deviceFormTitle").textContent =
+        device ? "Edit peranti" : "Daftar peranti";
+
+      populateSchoolSelect("deviceSchool", device?.school || "");
+      document.getElementById("otherDeviceField").hidden = true;
+
+      if (device) {
+        document.getElementById("deviceGroup").value = device.group || "";
+        document.getElementById("deviceType").value = device.type || "";
+        document.getElementById("deviceModel").value = device.model || "";
+        document.getElementById("deviceSerial").value = device.serial || "";
+        document.getElementById("deviceRegistration").value =
+          device.registration || "";
+        document.getElementById("deviceOtherType").value =
+          device.otherType || "";
+
+        document.getElementById("deviceStatus").value =
+          device.status || "Berfungsi";
+        document.getElementById("deviceProblem").value =
+          device.problem || "";
+
+        toggleOtherDevice();
+      } else {
+        document.getElementById("deviceStatus").value = "Berfungsi";
+      }
+
+      toggleDeviceProblem();
+      document.getElementById("deviceDialog").hidden = false;
+    }
+
+    function toggleOtherDevice() {
+      const isOther =
+        document.getElementById("deviceType").value === "Lain-lain";
+
+      document.getElementById("otherDeviceField").hidden = !isOther;
+      document.getElementById("deviceOtherType").required = isOther;
+    }
+
+    function toggleDeviceProblem() {
+      const isProblem =
+        document.getElementById("deviceStatus").value === "Nyatakan Masalah";
+
+      document.getElementById("deviceProblemField").hidden = !isProblem;
+      document.getElementById("deviceProblem").required = isProblem;
+
+      if (!isProblem) {
+        document.getElementById("deviceProblem").value = "";
+      }
+    }
+
+    document.getElementById("deviceForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const id = Number(document.getElementById("deviceId").value);
+      const status = document.getElementById("deviceStatus").value;
+
+      const deviceData = {
+        school: document.getElementById("deviceSchool").value,
+        group: document.getElementById("deviceGroup").value,
+        type: document.getElementById("deviceType").value,
+        otherType:
+          document.getElementById("deviceType").value === "Lain-lain"
+            ? document.getElementById("deviceOtherType").value.trim()
+            : "",
+        model: document.getElementById("deviceModel").value.trim(),
+        serial: document.getElementById("deviceSerial").value.trim(),
+        registration: document.getElementById("deviceRegistration").value.trim(),
+        status,
+        problem: status === "Nyatakan Masalah"
+          ? document.getElementById("deviceProblem").value.trim()
+          : ""
+      };
+
+      if (id) {
+        const index = devices.findIndex(device => Number(device.id) === id);
+        if (index >= 0) {
+          devices[index] = { ...devices[index], ...deviceData };
+        }
+      } else {
+        devices.push({ id: Date.now(), ...deviceData });
+      }
+
+      saveData();
+      closeDialog("deviceDialog");
+      renderDevices();
+      renderSchools();
+      renderDashboard();
+    });
+
+    function renderDevices() {
+      const filter = document.getElementById("deviceFilter").value;
+      const searchText =
+        (document.getElementById("deviceSearch").value || "").toLowerCase();
+
+      const filteredDevices = devices.filter(device => {
+        const matchesGroup = !filter || device.group === filter;
+
+        const searchFields = [
+          device.school,
+          device.group,
+          device.type,
+          device.otherType,
+          device.model,
+          device.serial,
+          device.registration,
+          device.status,
+          device.problem
+        ].join(" ").toLowerCase();
+
+        return matchesGroup && searchFields.includes(searchText);
+      });
+
+      document.getElementById("deviceRows").innerHTML =
+        filteredDevices.map((device, index) => {
+          const status = device.status || "Berfungsi";
+          const problem = device.problem || "";
+
+          return `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${escapeHTML(device.school)}</td>
+              <td>${escapeHTML(device.group)}</td>
+              <td>
+                ${escapeHTML(device.type)}
+                ${device.otherType ? " — " + escapeHTML(device.otherType) : ""}
+              </td>
+              <td>${escapeHTML(device.model || "-")}</td>
+              <td>${escapeHTML(device.serial || "-")}</td>
+              <td>${escapeHTML(device.registration || "-")}</td>
+              <td>
+                <div class="device-status">
+                  <select
+                    aria-label="Keadaan peranti"
+                    onchange="updateDeviceStatus(${Number(device.id)}, this.value)"
+                  >
+                    <option value="Berfungsi" ${status === "Berfungsi" ? "selected" : ""}>
+                      Berfungsi
+                    </option>
+                    <option value="Tidak Berfungsi" ${status === "Tidak Berfungsi" ? "selected" : ""}>
+                      Tidak Berfungsi
+                    </option>
+                    <option value="Nyatakan Masalah" ${status === "Nyatakan Masalah" ? "selected" : ""}>
+                      Nyatakan Masalah
+                    </option>
+                  </select>
+
+                  ${status === "Nyatakan Masalah"
+                    ? `
+                      <textarea
+                        rows="2"
+                        placeholder="Nyatakan masalah peranti"
+                        aria-label="Penerangan masalah peranti"
+                        onchange="updateDeviceProblem(${Number(device.id)}, this.value)"
+                      >${escapeHTML(problem)}</textarea>
+                    `
+                    : ""}
+
+                  <div class="actions no-print" style="margin-top:8px">
+                    <button class="orange"
+                      onclick="editDevice(${Number(device.id)})">Edit</button>
+                    <button class="red"
+                      onclick="deleteDevice(${Number(device.id)})">Padam</button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join("");
+    }
+
+    function updateDeviceStatus(id, status) {
+      const device = devices.find(item => Number(item.id) === Number(id));
+      if (!device) return;
+
+      device.status = status;
+
+      if (status !== "Nyatakan Masalah") {
+        device.problem = "";
+      }
+
+      saveData();
+      renderDevices();
+    }
+
+    function updateDeviceProblem(id, problem) {
+      const device = devices.find(item => Number(item.id) === Number(id));
+      if (!device) return;
+
+      device.problem = problem.trim();
+      saveData();
+    }
+
+    function editDevice(id) {
+      const device = devices.find(item => Number(item.id) === Number(id));
+      if (device) openDeviceForm(device);
+    }
+
+    function deleteDevice(id) {
+      if (!confirm("Padam rekod peranti?")) return;
+
+      devices = devices.filter(device => Number(device.id) !== Number(id));
+      saveData();
+      renderDevices();
+      renderSchools();
+      renderDashboard();
+    }
+
+    function downloadDevicePDF(group) {
+      const filteredDevices = devices.filter(device =>
+        !group || device.group === group
+      );
+
+      const title = group
+        ? `Senarai Peranti ${group}`
+        : "Senarai Semua Peranti";
+
+      const rows = filteredDevices.map((device, index) => {
+        const status = device.status || "Berfungsi";
+        const condition = status === "Nyatakan Masalah" && device.problem
+          ? `${status} — ${device.problem}`
+          : status;
+
+        return `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${escapeHTML(device.school)}</td>
+            <td>${escapeHTML(device.group)}</td>
+            <td>
+              ${escapeHTML(device.type)}
+              ${device.otherType ? " — " + escapeHTML(device.otherType) : ""}
+            </td>
+            <td>${escapeHTML(device.model || "-")}</td>
+            <td>${escapeHTML(device.serial || "-")}</td>
+            <td>${escapeHTML(device.registration || "-")}</td>
+            <td>${escapeHTML(condition)}</td>
+          </tr>
+        `;
+      }).join("");
+
+      printDocument(title, `
+        <table>
+          <thead>
+            <tr>
+              <th>Bil.</th>
+              <th>Sekolah</th>
+              <th>Kumpulan</th>
+              <th>Jenis</th>
+              <th>Model</th>
+              <th>No. Siri</th>
+              <th>No. Pendaftaran</th>
+              <th>Keadaan Peranti</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows || '<tr><td colspan="8">Tiada rekod</td></tr>'}
+          </tbody>
+        </table>
+      `);
+    }
+
+    function populateScstSelects() {
+      const memberSelect = document.getElementById("scstMember");
+      const currentValue = memberSelect.value;
+
+      memberSelect.innerHTML =
+        '<option value="">Pilih profil ahli</option>' +
+        members.map(member => `
+          <option value="${escapeHTML(member.id)}">
+            ${escapeHTML(member.name)} — ${escapeHTML(member.email)}
+          </option>
+        `).join("");
+
+      if (members.some(member => String(member.id) === currentValue)) {
+        memberSelect.value = currentValue;
+      }
+
+      populateSchoolSelect("scstSchool");
+    }
+
+    function renderScst() {
+      const memberId = Number(document.getElementById("scstMember").value);
+      const member = members.find(item => Number(item.id) === memberId);
+
+      const visitedSchools = new Set(
+        reports
+          .filter(report => Number(report.memberId) === memberId)
+          .map(report => report.school)
+      );
+
+      document.getElementById("scstProfile").innerHTML = member
+        ? `<b>${escapeHTML(member.name)}</b> — ${escapeHTML(member.position)}, ${escapeHTML(member.grade)}
+           <br>Emel: ${escapeHTML(member.email)} | Telefon: ${escapeHTML(member.phone)}
+           <br>Sekolah seliaan: ${escapeHTML(getMemberSchools(member).join(", ") || "-")}
+           <br>Sekolah berbeza dilawati: <b>${visitedSchools.size}</b>`
+        : "Pilih profil ahli. Jika belum berdaftar, daftar melalui menu Maklumat Ahli PTIS Kapit.";
+
+      const filteredReports = reports.filter(report =>
+        !memberId || Number(report.memberId) === memberId
+      );
+
+      document.getElementById("scstRecords").innerHTML =
+        filteredReports.length
+          ? filteredReports.map(report => {
+              const reportMember = members.find(
+                item => Number(item.id) === Number(report.memberId)
+              );
+
+              return `
+                <div class="profile">
+                  <b>${escapeHTML(report.school)}</b> — ${escapeHTML(report.date)}
+                  <br>Penghantar: ${escapeHTML(reportMember?.name || "Profil tidak ditemui")}
+                  <br>Fail: ${escapeHTML(report.fileName)}
+                  <div class="actions" style="margin-top:8px">
+                    <button onclick="downloadReport(${Number(report.id)})">Muat turun PDF</button>
+                    <button class="red" onclick="deleteReport(${Number(report.id)})">Padam</button>
+                  </div>
+                </div>
+              `;
+            }).join("")
+          : '<p class="empty">Belum ada laporan SCST.</p>';
+    }
+
+    document.getElementById("scstForm").addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const memberId = Number(document.getElementById("scstMember").value);
+      const file = document.getElementById("scstFile").files[0];
+
+      if (!members.some(member => Number(member.id) === memberId)) {
+        alert("Sila pilih profil ahli.");
+        return;
+      }
+
+      if (!file ||
+          (file.type !== "application/pdf" &&
+           !file.name.toLowerCase().endsWith(".pdf"))) {
+        alert("Sila pilih fail PDF sahaja.");
+        return;
+      }
+
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Fail melebihi 2 MB.");
+        return;
+      }
+
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      reports.push({
+        id: Date.now(),
+        memberId,
+        school: document.getElementById("scstSchool").value,
+        date: document.getElementById("scstDate").value,
+        fileName: file.name,
+        dataUrl
+      });
+
+      saveData();
+      event.target.reset();
+      renderScst();
+      renderDashboard();
+      renderMembers();
+      alert("Laporan SCST berjaya disimpan.");
+    });
+
+    function downloadReport(id) {
+      const report = reports.find(item => Number(item.id) === Number(id));
+      if (!report) return;
+
+      const link = document.createElement("a");
+      link.href = report.dataUrl;
+      link.download = report.fileName;
+      link.click();
+    }
+
+    function deleteReport(id) {
+      if (!confirm("Padam laporan ini?")) return;
+
+      reports = reports.filter(report => Number(report.id) !== Number(id));
+      saveData();
+      renderScst();
+      renderDashboard();
+      renderMembers();
+    }
+
+    function printDocument(title, content) {
+      const printWindow = window.open("", "_blank");
+
+      if (!printWindow) {
+        alert("Benarkan pop-up untuk menjana PDF.");
+        return;
+      }
+
+      printWindow.document.write(`
+        <!doctype html>
+        <html lang="ms">
+        <head>
+          <meta charset="utf-8">
+          <title>${escapeHTML(title)}</title>
+          <style>
+            body { font: 12px Arial; padding: 20px; }
+            h1 { font-size: 20px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #555; padding: 7px; text-align: left; }
+            th { background: #eee; }
+            @media print { button { display: none; } }
+          </style>
+        </head>
+        <body>
+          <h1>${escapeHTML(title)}</h1>
+          <p>PTIS Kapit — Tarikh cetakan: ${new Date().toLocaleDateString("ms-MY")}</p>
+          ${content}
+          <p><button onclick="window.print()">Cetak / Simpan sebagai PDF</button></p>
+        </body>
+        </html>
+      `);
+
+      printWindow.document.close();
+    }
+
+    renderDashboard();
+    renderSchools();
+    renderDevices();
+    renderMembers();
+    populateMemberSchoolOptions();
+    populateScstSelects();
+  </script>
+</body>
+</html>
